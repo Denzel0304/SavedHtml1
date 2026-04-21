@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SavedHtml1 Archive</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #0f172a; color: #e2e8f0; }
+        .card:hover { transform: translateY(-4px); transition: all 0.2s; border-color: #38bdf8; }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <div class="max-w-6xl mx-auto">
+        <header class="flex flex-col md:flex-row justify-between items-center mb-10 gap-4">
+            <h1 class="text-3xl font-bold text-sky-400">Digital Archive</h1>
+            <input type="text" id="searchInput" placeholder="제목, 태그, 메모 검색..." 
+                   class="bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 w-full md:w-96 focus:outline-none focus:ring-2 focus:ring-sky-500">
+        </header>
+
+        <div id="categoryFilter" class="flex flex-wrap gap-2 mb-8">
+            </div>
+
+        <div id="archiveGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            </div>
+    </div>
+
+    <script>
+        let allData = [];
+
+        async function loadArchive() {
+            try {
+                const res = await fetch('list.json');
+                allData = await res.json();
+                renderCategories();
+                renderCards(allData);
+            } catch (e) { console.error("데이터 로드 실패:", e); }
+        }
+
+        function renderCategories() {
+            const cats = ['전체', ...new Set(allData.map(item => item.category))];
+            const container = document.getElementById('categoryFilter');
+            container.innerHTML = cats.map(cat => `
+                <button onclick="filterCategory('${cat}')" class="px-4 py-1 rounded-full bg-slate-800 hover:bg-sky-600 text-sm transition">
+                    ${cat}
+                </button>
+            `).join('');
+        }
+
+        function renderCards(data) {
+            const container = document.getElementById('archiveGrid');
+            container.innerHTML = data.map(item => `
+                <div class="card bg-slate-800 border border-slate-700 p-5 rounded-xl flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-xs font-semibold text-sky-400 px-2 py-0.5 bg-sky-900/30 rounded">${item.category}</span>
+                            <span class="text-xs text-slate-500">${item.date}</span>
+                        </div>
+                        <h3 class="text-lg font-bold mb-2 break-all">${item.title}</h3>
+                        <p class="text-sm text-slate-400 mb-4 line-clamp-2">${item.memo || '메모 없음'}</p>
+                        <div class="flex flex-wrap gap-1 mb-4">
+                            ${item.tags.map(tag => `<span class="text-xs text-slate-500">#${tag}</span>`).join('')}
+                        </div>
+                    </div>
+                    <a href="data/${item.filename}" target="_blank" 
+                       class="block w-full text-center py-2 bg-slate-700 hover:bg-sky-600 rounded-lg text-sm font-medium transition">
+                       원본 보기
+                    </a>
+                </div>
+            `).join('');
+        }
+
+        function filterCategory(cat) {
+            if (cat === '전체') renderCards(allData);
+            else renderCards(allData.filter(item => item.category === cat));
+        }
+
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const val = e.target.value.toLowerCase();
+            const filtered = allData.filter(item => 
+                item.title.toLowerCase().includes(val) || 
+                item.memo.toLowerCase().includes(val) ||
+                item.tags.some(t => t.toLowerCase().includes(val))
+            );
+            renderCards(filtered);
+        });
+
+        loadArchive();
+    </script>
+</body>
+</html>
