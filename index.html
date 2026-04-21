@@ -8,33 +8,83 @@
     <style>
         body { background-color: #0f172a; color: #e2e8f0; }
         .card:hover { transform: translateY(-4px); transition: all 0.2s; border-color: #38bdf8; }
+        .tool-box { background: linear-gradient(145deg, #1e293b, #0f172a); border: 1px dashed #334155; }
     </style>
 </head>
 <body class="p-4 md:p-8">
     <div class="max-w-6xl mx-auto">
-        <header class="flex flex-col md:flex-row justify-between items-center mb-10 gap-4">
-            <h1 class="text-3xl font-bold text-sky-400">Digital Archive</h1>
-            <input type="text" id="searchInput" placeholder="제목, 태그, 메모 검색..." 
+        <section class="tool-box p-6 rounded-2xl mb-12">
+            <h2 class="text-xl font-bold text-sky-400 mb-4 flex items-center gap-2">
+                📁 업로드 파일 정리 도구
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                <input type="text" id="inCat" placeholder="카테고리 (예: 경제)" class="bg-slate-800 border border-slate-600 rounded px-3 py-2 text-sm focus:ring-1 focus:ring-sky-500 outline-none">
+                <input type="text" id="inTag" placeholder="태그 (쉼표로 구분)" class="bg-slate-800 border border-slate-600 rounded px-3 py-2 text-sm focus:ring-1 focus:ring-sky-500 outline-none">
+                <input type="text" id="inTitle" placeholder="제목" class="bg-slate-800 border border-slate-600 rounded px-3 py-2 text-sm focus:ring-1 focus:ring-sky-500 outline-none">
+                <input type="text" id="inMemo" placeholder="간단한 메모" class="bg-slate-800 border border-slate-600 rounded px-3 py-2 text-sm focus:ring-1 focus:ring-sky-500 outline-none">
+            </div>
+            
+            <div class="flex flex-col md:flex-row items-center gap-4 border-t border-slate-700 pt-4">
+                <div class="flex-1 overflow-hidden">
+                    <p class="text-xs text-slate-500 mb-1">생성될 파일명 (복사해서 파일명을 바꾸세요):</p>
+                    <code id="resultName" class="text-sky-300 text-sm font-mono break-all bg-slate-900 px-2 py-1 rounded block">파일 정보를 입력하면 생성됩니다.</code>
+                </div>
+                <button onclick="copyFileName()" class="whitespace-nowrap bg-sky-600 hover:bg-sky-500 px-4 py-2 rounded text-sm font-bold transition">파일명 복사</button>
+                <a href="https://github.com/Denzel0304/SavedHtml1/upload/main/data" target="_blank" class="whitespace-nowrap bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded text-sm font-bold transition">깃허브 업로드 이동</a>
+            </div>
+        </section>
+
+        <header class="flex flex-col md:flex-row justify-between items-center mb-10 gap-4 border-b border-slate-800 pb-6">
+            <h1 class="text-3xl font-bold text-white">Digital <span class="text-sky-500">Archive</span></h1>
+            <input type="text" id="searchInput" placeholder="검색어 입력..." 
                    class="bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 w-full md:w-96 focus:outline-none focus:ring-2 focus:ring-sky-500">
         </header>
 
-        <div id="categoryFilter" class="flex flex-wrap gap-2 mb-8">
-            </div>
-
-        <div id="archiveGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            </div>
+        <div id="categoryFilter" class="flex flex-wrap gap-2 mb-8"></div>
+        <div id="archiveGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </div>
 
     <script>
-        let allData = [];
+        // 파일명 실시간 생성 로직
+        const inCat = document.getElementById('inCat');
+        const inTag = document.getElementById('inTag');
+        const inTitle = document.getElementById('inTitle');
+        const inMemo = document.getElementById('inMemo');
+        const resultName = document.getElementById('resultName');
 
+        function updateName() {
+            const cat = inCat.value || "미분류";
+            const tag = inTag.value || "";
+            const title = inTitle.value || "제목없음";
+            const memo = inMemo.value || "";
+            
+            let name = `[${cat}]`;
+            if(tag) name += `[${tag}]`;
+            name += ` ${title}`;
+            if(memo) name += `_${memo}`;
+            name += `.html`;
+            
+            resultName.innerText = name;
+        }
+
+        [inCat, inTag, inTitle, inMemo].forEach(el => el.addEventListener('input', updateName));
+
+        function copyFileName() {
+            navigator.clipboard.writeText(resultName.innerText);
+            alert("파일명이 복사되었습니다! 파일의 이름을 바꾸고 업로드하세요.");
+        }
+
+        // 기존 로드 로직
+        let allData = [];
         async function loadArchive() {
             try {
                 const res = await fetch('list.json');
                 allData = await res.json();
                 renderCategories();
                 renderCards(allData);
-            } catch (e) { console.error("데이터 로드 실패:", e); }
+            } catch (e) { 
+                document.getElementById('archiveGrid').innerHTML = "<p class='text-slate-500'>데이터가 아직 없습니다. 파일을 먼저 업로드해 주세요.</p>";
+            }
         }
 
         function renderCategories() {
@@ -50,21 +100,21 @@
         function renderCards(data) {
             const container = document.getElementById('archiveGrid');
             container.innerHTML = data.map(item => `
-                <div class="card bg-slate-800 border border-slate-700 p-5 rounded-xl flex flex-col justify-between">
+                <div class="card bg-slate-800 border border-slate-700 p-5 rounded-xl flex flex-col justify-between shadow-lg">
                     <div>
-                        <div class="flex justify-between items-start mb-2">
-                            <span class="text-xs font-semibold text-sky-400 px-2 py-0.5 bg-sky-900/30 rounded">${item.category}</span>
-                            <span class="text-xs text-slate-500">${item.date}</span>
+                        <div class="flex justify-between items-start mb-2 text-[10px]">
+                            <span class="font-bold text-sky-400 px-2 py-0.5 bg-sky-900/30 rounded uppercase tracking-wider">${item.category}</span>
+                            <span class="text-slate-500">${item.date}</span>
                         </div>
-                        <h3 class="text-lg font-bold mb-2 break-all">${item.title}</h3>
-                        <p class="text-sm text-slate-400 mb-4 line-clamp-2">${item.memo || '메모 없음'}</p>
+                        <h3 class="text-lg font-bold mb-2 break-all text-slate-100">${item.title}</h3>
+                        <p class="text-sm text-slate-400 mb-4 line-clamp-3 leading-relaxed">${item.memo || '-'}</p>
                         <div class="flex flex-wrap gap-1 mb-4">
-                            ${item.tags.map(tag => `<span class="text-xs text-slate-500">#${tag}</span>`).join('')}
+                            ${item.tags.map(tag => `<span class="text-[11px] text-slate-500 bg-slate-900/50 px-2 py-0.5 rounded border border-slate-700">#${tag}</span>`).join('')}
                         </div>
                     </div>
                     <a href="data/${item.filename}" target="_blank" 
-                       class="block w-full text-center py-2 bg-slate-700 hover:bg-sky-600 rounded-lg text-sm font-medium transition">
-                       원본 보기
+                       class="block w-full text-center py-2.5 bg-slate-700 hover:bg-sky-600 rounded-lg text-sm font-bold transition">
+                       원본 문서 열기
                     </a>
                 </div>
             `).join('');
