@@ -1,0 +1,228 @@
+
+<style>
+  .wrap { padding: 1rem 0; font-size: 14px; }
+  .title-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 0.5px solid var(--color-border-tertiary); }
+  .title-bar h2 { font-size: 16px; font-weight: 500; margin: 0; color: var(--color-text-primary); }
+  .subtitle { font-size: 12px; color: var(--color-text-secondary); margin: 0; }
+  .card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; margin-bottom: 12px; }
+  .card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px; }
+  .card-name { font-size: 15px; font-weight: 500; color: var(--color-text-primary); margin: 0 0 3px 0; }
+  .card-sub { font-size: 12px; color: var(--color-text-secondary); margin: 0; }
+  .badge { font-size: 11px; padding: 3px 8px; border-radius: 20px; white-space: nowrap; }
+  .badge-ok { background: #EAF3DE; color: #3B6D11; }
+  .section-label { font-size: 11px; font-weight: 500; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.05em; margin: 10px 0 6px; }
+  .row { display: flex; gap: 8px; margin-bottom: 5px; align-items: flex-start; }
+  .dot { width: 5px; height: 5px; border-radius: 50%; margin-top: 6px; flex-shrink: 0; }
+  .dot-green { background: #639922; }
+  .dot-red { background: #E24B4A; }
+  .dot-amber { background: #BA7517; }
+  .row-text { font-size: 13px; color: var(--color-text-primary); line-height: 1.5; }
+  .warn-box { background: #FAEEDA; border-radius: var(--border-radius-md); padding: 8px 12px; margin-top: 10px; }
+  .warn-text { font-size: 12px; color: #633806; line-height: 1.5; margin: 0; }
+  .divider { border: none; border-top: 0.5px solid var(--color-border-tertiary); margin: 8px 0; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .spec { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 6px 10px; }
+  .spec-label { font-size: 11px; color: var(--color-text-secondary); margin: 0; }
+  .spec-val { font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin: 0; }
+  .schedule-row { display: grid; grid-template-columns: 90px 1fr; gap: 8px; align-items: start; padding: 8px 0; border-bottom: 0.5px solid var(--color-border-tertiary); }
+  .schedule-row:last-child { border-bottom: none; }
+  .time-badge { font-size: 12px; font-weight: 500; color: #185FA5; background: #E6F1FB; padding: 3px 8px; border-radius: 20px; text-align: center; }
+  .meds { font-size: 13px; color: var(--color-text-primary); line-height: 1.6; }
+</style>
+
+<div class="wrap">
+
+  <div class="title-bar">
+    <div>
+      <h2>영양제 선택 가이드</h2>
+      <p class="subtitle">48세 남 · 88kg · 고혈압(텔미베타플러스) · 이석증 · 2026.05</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <p class="card-name">① 멀티비타민</p>
+        <p class="card-sub">Nature Made Multi for Him 90정</p>
+      </div>
+      <span class="badge badge-ok">현재 사용 중</span>
+    </div>
+    <div class="section-label">선택 이유</div>
+    <div class="row"><div class="dot dot-green"></div><div class="row-text">아연 15mg — 루테인과 합산 23.5mg으로 상한(35mg) 안전</div></div>
+    <div class="row"><div class="dot dot-green"></div><div class="row-text">셀레늄 70μg — 루테인과 합산 125μg으로 안전권</div></div>
+    <div class="row"><div class="dot dot-green"></div><div class="row-text">칼슘 160mg — 이뇨제 복용자 기준 적절한 저용량</div></div>
+    <div class="row"><div class="dot dot-green"></div><div class="row-text">철분 없음 — 성인 남성에게 적합</div></div>
+    <div class="row"><div class="dot dot-green"></div><div class="row-text">USP 인증 — 품질 보증</div></div>
+    <hr class="divider">
+    <div class="section-label">다음 제품 구매 시 반드시 확인</div>
+    <div class="row"><div class="dot dot-red"></div><div class="row-text">아연 15mg 이하인지 확인 (루테인과 합산 35mg 초과 금지)</div></div>
+    <div class="row"><div class="dot dot-red"></div><div class="row-text">셀레늄 100μg 이하인지 확인</div></div>
+    <div class="row"><div class="dot dot-red"></div><div class="row-text">칼슘 200mg 이하인지 확인 (HCTZ 이뇨제 복용 중)</div></div>
+    <div class="row"><div class="dot dot-red"></div><div class="row-text">철분(Iron) 없는 남성용 제품인지 확인</div></div>
+    <div class="warn-box">
+      <p class="warn-text">피할 것: Alive For Men (아연 22mg + 루테인 합산 시 33mg으로 위험), 철분 포함 제품</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <p class="card-name">② 루테인·지아잔틴</p>
+        <p class="card-sub">Now Foods Lutein 20mg 90정</p>
+      </div>
+      <span class="badge badge-ok">현재 사용 중</span>
+    </div>
+    <div class="section-label">선택 이유</div>
+    <div class="row"><div class="dot dot-green"></div><div class="row-text">루테인 20mg + 지아잔틴 1mg — 지아잔틴 별도 불필요</div></div>
+    <div class="row"><div class="dot dot-green"></div><div class="row-text">아연·셀레늄 없음 — 멀티와 중복 제로</div></div>
+    <div class="row"><div class="dot dot-green"></div><div class="row-text">베지캡슐 — 흡수율 양호</div></div>
+    <hr class="divider">
+    <div class="section-label">다음 제품 구매 시 반드시 확인</div>
+    <div class="row"><div class="dot dot-red"></div><div class="row-text">아연·셀레늄 포함 여부 확인 — 포함된 제품은 구매 금지</div></div>
+    <div class="row"><div class="dot dot-red"></div><div class="row-text">아스타잔틴 포함 복합제 주의 — 아연·셀레늄 함께 들어있는 경우 많음</div></div>
+    <div class="warn-box">
+      <p class="warn-text">피할 것: 기존 제품(아연 8.5mg + 셀레늄 55μg 포함 루테인 복합제)</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <p class="card-name">③ 비타민 D3</p>
+        <p class="card-sub">Swanson D3 2,000IU 250정</p>
+      </div>
+      <span class="badge badge-ok">현재 사용 중</span>
+    </div>
+    <div class="section-label">선택 이유</div>
+    <div class="row"><div class="dot dot-green"></div><div class="row-text">멀티 1,000IU + 2,000IU = 총 3,000IU — 88kg 기준 적정량</div></div>
+    <div class="row"><div class="dot dot-green"></div><div class="row-text">단일 성분 제품 — 브랜드 무관하게 동일 효과</div></div>
+    <div class="row"><div class="dot dot-green"></div><div class="row-text">이석증 + HCTZ 고려 3,000IU가 안전한 상한</div></div>
+    <hr class="divider">
+    <div class="section-label">다음 제품 구매 시 반드시 확인</div>
+    <div class="row"><div class="dot dot-red"></div><div class="row-text">D3(콜레칼시페롤)인지 확인 — D2(에르고칼시페롤) 아닌 것</div></div>
+    <div class="row"><div class="dot dot-red"></div><div class="row-text">2,000IU 단일 제품인지 확인 — 5,000IU 금지 (HCTZ 복용 중 고칼슘혈증 위험)</div></div>
+    <div class="row"><div class="dot dot-amber"></div><div class="row-text">50mcg = 2,000IU 동일 (단위 환산 주의)</div></div>
+    <div class="warn-box">
+      <p class="warn-text">피할 것: 5,000IU 이상 단독 제품, 칼슘+D3 복합제</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <p class="card-name">④ 코엔자임 Q10</p>
+        <p class="card-sub">Swanson CoQ10 100mg 소프트젤 50정</p>
+      </div>
+      <span class="badge badge-ok">현재 사용 중</span>
+    </div>
+    <div class="section-label">선택 이유</div>
+    <div class="row"><div class="dot dot-green"></div><div class="row-text">CoQ10 100mg 단일 성분 — 혈압약 복용자 혈압 보조</div></div>
+    <div class="row"><div class="dot dot-green"></div><div class="row-text">소프트젤 — 지용성이라 흡수율 최적</div></div>
+    <div class="row"><div class="dot dot-green"></div><div class="row-text">텔미사르탄과 충돌 없음</div></div>
+    <hr class="divider">
+    <div class="section-label">다음 제품 구매 시 반드시 확인</div>
+    <div class="row"><div class="dot dot-red"></div><div class="row-text">산사나무베리(Hawthorn Berry) 포함 여부 확인 — 혈압약과 병용 시 혈압 과도 하강</div></div>
+    <div class="row"><div class="dot dot-red"></div><div class="row-text">CoQ10 단일 성분인지 확인 — 복합 허브 제품 금지</div></div>
+    <div class="row"><div class="dot dot-amber"></div><div class="row-text">유비퀴놀(Ubiquinol) 형태가 흡수율 더 좋으나 가격 높음 — 선택사항</div></div>
+    <div class="warn-box">
+      <p class="warn-text">피할 것: Now Foods CoQ10 with Hawthorn (산사나무베리 400mg 포함 복합제)</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <p class="card-name">⑤ 마그네슘</p>
+        <p class="card-sub">Swanson Albion 마그네슘 글리시네이트 133mg 90정</p>
+      </div>
+      <span class="badge badge-ok">현재 사용 중</span>
+    </div>
+    <div class="section-label">선택 이유</div>
+    <div class="row"><div class="dot dot-green"></div><div class="row-text">Albion 킬레이트 원료 — 흡수율 최고 등급</div></div>
+    <div class="row"><div class="dot dot-green"></div><div class="row-text">멀티 100mg + 133mg = 233mg — HCTZ 손실 보충에 적절</div></div>
+    <div class="row"><div class="dot dot-green"></div><div class="row-text">설사 없음 — 글리시네이트 형태 특징</div></div>
+    <div class="row"><div class="dot dot-green"></div><div class="row-text">이석증 내이 신경 보호에 기여</div></div>
+    <hr class="divider">
+    <div class="section-label">다음 제품 구매 시 반드시 확인</div>
+    <div class="row"><div class="dot dot-red"></div><div class="row-text">산화마그네슘(Magnesium Oxide) 절대 금지 — 흡수율 4%에 불과</div></div>
+    <div class="row"><div class="dot dot-green"></div><div class="row-text">글리시네이트(Glycinate) 또는 시트레이트(Citrate) 형태만 구매</div></div>
+    <div class="row"><div class="dot dot-amber"></div><div class="row-text">용량은 1일 총 200~250mg 범위 유지 (멀티 100mg 합산 기준)</div></div>
+    <div class="warn-box">
+      <p class="warn-text">피할 것: 산화마그네슘(Oxide), 수산화마그네슘(Hydroxide) 형태 제품</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <p class="card-name">⑥ 비타민 K2-MK7</p>
+        <p class="card-sub">Now Foods K2-MK7 100mcg</p>
+      </div>
+      <span class="badge badge-ok">현재 사용 중</span>
+    </div>
+    <div class="section-label">선택 이유</div>
+    <div class="row"><div class="dot dot-green"></div><div class="row-text">MenaQ7® 원료 — K2-MK7 세계 최고 등급 원료, 임상 검증</div></div>
+    <div class="row"><div class="dot dot-green"></div><div class="row-text">이석증 재발 억제 — 내이 칼슘 결정 안정화</div></div>
+    <div class="row"><div class="dot dot-green"></div><div class="row-text">D3와 시너지 — 칼슘을 뼈로 유도, 혈관 석회화 방지</div></div>
+    <div class="row"><div class="dot dot-green"></div><div class="row-text">멀티의 K1과 역할 다름 — 중복 아님</div></div>
+    <hr class="divider">
+    <div class="section-label">다음 제품 구매 시 반드시 확인</div>
+    <div class="row"><div class="dot dot-red"></div><div class="row-text">MK-7 형태인지 확인 — MK-4는 반감기 짧아 효과 낮음</div></div>
+    <div class="row"><div class="dot dot-red"></div><div class="row-text">100~200mcg 범위인지 확인</div></div>
+    <div class="row"><div class="dot dot-amber"></div><div class="row-text">항응고제(와파린 등) 복용 시 K2 금지 — 현재 해당 없음</div></div>
+    <div class="warn-box">
+      <p class="warn-text">피할 것: MK-4 형태, K1+K2 복합제(용량 불명확), 고용량 K2(200mcg 초과)</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <p class="card-name">⑦ 오메가3</p>
+        <p class="card-sub">종근당 오메가3 EPA+DHA 900mg</p>
+      </div>
+      <span class="badge badge-ok">현재 사용 중</span>
+    </div>
+    <div class="section-label">선택 이유</div>
+    <div class="row"><div class="dot dot-green"></div><div class="row-text">EPA+DHA 900mg — 혈행·혈압 보조에 충분한 용량</div></div>
+    <div class="row"><div class="dot dot-green"></div><div class="row-text">식단 생선 없음 보완</div></div>
+    <div class="row"><div class="dot dot-green"></div><div class="row-text">텔미사르탄과 시너지 — 혈압 추가 하강</div></div>
+    <hr class="divider">
+    <div class="section-label">다음 제품 구매 시 반드시 확인</div>
+    <div class="row"><div class="dot dot-green"></div><div class="row-text">EPA+DHA 합계 800mg 이상인지 확인</div></div>
+    <div class="row"><div class="dot dot-red"></div><div class="row-text">총 오메가3 3,000mg 초과 금지 — 혈압약 효과 과도 강화</div></div>
+    <div class="row"><div class="dot dot-amber"></div><div class="row-text">rTG 형태가 흡수율 높음 — 선택사항</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <p class="card-name">복용 스케줄</p>
+        <p class="card-sub">매일 고정 루틴</p>
+      </div>
+    </div>
+    <div class="schedule-row">
+      <span class="time-badge">오후 3시 식후</span>
+      <span class="meds">멀티 1정 · 루테인 1캡슐 · D3 1캡슐 · CoQ10 1캡슐 · K2-MK7 1캡슐 · 오메가3 2캡슐</span>
+    </div>
+    <div class="schedule-row">
+      <span class="time-badge">취침 전 식사 후</span>
+      <span class="meds">마그네슘 1캡슐</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <p class="card-name">절대 추가 금지 항목</p>
+        <p class="card-sub">HCTZ 이뇨제 복용 중</p>
+      </div>
+    </div>
+    <div class="row"><div class="dot dot-red"></div><div class="row-text">칼슘 보충제 별도 추가 금지 — 고칼슘혈증 위험</div></div>
+    <div class="row"><div class="dot dot-red"></div><div class="row-text">산사나무베리(Hawthorn) 금지 — 혈압 과도 하강</div></div>
+    <div class="row"><div class="dot dot-red"></div><div class="row-text">감초(Licorice) 금지 — 혈압 상승</div></div>
+    <div class="row"><div class="dot dot-red"></div><div class="row-text">고용량 비타민E (400IU 이상) 금지</div></div>
+    <div class="row"><div class="dot dot-amber"></div><div class="row-text">6개월마다 혈액검사 권장 — 25(OH)D · 마그네슘 · 요산 · 칼슘</div></div>
+  </div>
+
+</div>
