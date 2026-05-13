@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>혈액검사 결과 — 서동현</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #0f1117;
+    --surface: #181c27;
+    --border: #252a38;
+    --text: #e8eaf0;
+    --muted: #6b7280;
+    --good: #34d399;
+    --good-bg: rgba(52,211,153,0.08);
+    --warn: #fbbf24;
+    --warn-bg: rgba(251,191,36,0.08);
+    --bad: #f87171;
+    --bad-bg: rgba(248,113,113,0.08);
+    --neutral: #93c5fd;
+    --neutral-bg: rgba(147,197,253,0.08);
+    --accent: #818cf8;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    padding: 32px 24px 80px;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  header {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 24px;
+    margin-bottom: 32px;
+  }
+
+  header h1 {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: #fff;
+  }
+
+  header p {
+    color: var(--muted);
+    font-size: 13px;
+    margin-top: 4px;
+  }
+
+  .meta {
+    display: flex;
+    gap: 24px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+
+  .meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .meta-item .label {
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .meta-item .value {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--accent);
+  }
+
+  .section {
+    margin-bottom: 36px;
+  }
+
+  .section-title {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+    padding-left: 4px;
+    border-left: 2px solid var(--accent);
+    padding-left: 10px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--surface);
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+
+  thead th {
+    padding: 11px 14px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    background: rgba(255,255,255,0.02);
+    border-bottom: 1px solid var(--border);
+  }
+
+  thead th.num { text-align: right; }
+
+  tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+  }
+
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: rgba(255,255,255,0.025); }
+
+  td {
+    padding: 10px 14px;
+    vertical-align: middle;
+  }
+
+  td.name {
+    font-weight: 500;
+    color: #d1d5db;
+    white-space: nowrap;
+  }
+
+  td.name small {
+    display: block;
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 400;
+  }
+
+  td.result {
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: right;
+  }
+
+  td.result2 {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    text-align: right;
+    color: var(--muted);
+  }
+
+  td.ref {
+    font-size: 12px;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+  }
+
+  td.unit {
+    font-size: 11px;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+
+  .badge.good { background: var(--good-bg); color: var(--good); }
+  .badge.warn { background: var(--warn-bg); color: var(--warn); }
+  .badge.bad  { background: var(--bad-bg);  color: var(--bad);  }
+  .badge.ok   { background: var(--neutral-bg); color: var(--neutral); }
+
+  .dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+
+  td.result.good { color: var(--good); }
+  td.result.warn { color: var(--warn); }
+  td.result.bad  { color: var(--bad);  }
+  td.result.ok   { color: var(--neutral); }
+
+  .note {
+    margin-top: 32px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+  }
+
+  .note h3 {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+
+  .note ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .note li {
+    font-size: 13px;
+    color: #9ca3af;
+    padding-left: 14px;
+    position: relative;
+  }
+
+  .note li::before {
+    content: '·';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+  }
+
+  .note li strong { color: var(--warn); }
+
+  footer {
+    margin-top: 40px;
+    font-size: 11px;
+    color: var(--muted);
+    text-align: center;
+  }
+
+  @media (max-width: 600px) {
+    body { padding: 20px 14px 60px; }
+    .meta { gap: 16px; }
+    td.ref { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>혈액검사 결과 기록</h1>
+  <p>혈액검사 결과 추적 및 비교 문서</p>
+  <div class="meta">
+    <div class="meta-item">
+      <span class="label">이름</span>
+      <span class="value">서동현</span>
+    </div>
+    <div class="meta-item">
+      <span class="label">성별/나이</span>
+      <span class="value">남 / 47세 (1979.03)</span>
+    </div>
+    <div class="meta-item">
+      <span class="label">키 / 체중</span>
+      <span class="value">192 cm / 89.4 kg</span>
+    </div>
+    <div class="meta-item">
+      <span class="label">골격근량</span>
+      <span class="value">44.3 kg</span>
+    </div>
+    <div class="meta-item">
+      <span class="label">체지방량</span>
+      <span class="value">11.5 kg</span>
+    </div>
+    <div class="meta-item">
+      <span class="label">BMI</span>
+      <span class="value">24.2</span>
+    </div>
+  </div>
+</header>
+
+<!-- ── 일반 혈액 ── -->
+<div class="section">
+  <div class="section-title">일반 혈액 검사 (CBC)</div>
+  <table>
+    <thead>
+      <tr>
+        <th>항목</th>
+        <th class="num">2026-05-08</th>
+        <th class="num">다음 검사</th>
+        <th>단위</th>
+        <th>참고치</th>
+        <th>평가</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="name">WBC<small>백혈구</small></td><td class="result ok">6.9</td><td class="result2">—</td><td class="unit">10³/μL</td><td class="ref">4.0 ~ 10.0</td><td><span class="badge ok"><span class="dot"></span>정상</span></td></tr>
+      <tr><td class="name">RBC<small>적혈구</small></td><td class="result ok">4.66</td><td class="result2">—</td><td class="unit">10⁶/μL</td><td class="ref">4.00 ~ 5.80</td><td><span class="badge ok"><span class="dot"></span>정상</span></td></tr>
+      <tr><td class="name">Hb<small>헤모글로빈</small></td><td class="result ok">14.8</td><td class="result2">—</td><td class="unit">g/dL</td><td class="ref">13.0 ~ 17.3</td><td><span class="badge ok"><span class="dot"></span>정상</span></td></tr>
+      <tr><td class="name">Hct<small>혈구용적률</small></td><td class="result ok">44.6</td><td class="result2">—</td><td class="unit">%</td><td class="ref">40.0 ~ 52.0</td><td><span class="badge ok"><span class="dot"></span>정상</span></td></tr>
+      <tr><td class="name">MCV<small>평균 적혈구 용적</small></td><td class="result ok">95.7</td><td class="result2">—</td><td class="unit">fL</td><td class="ref">80.0 ~ 99.9</td><td><span class="badge ok"><span class="dot"></span>정상</span></td></tr>
+      <tr><td class="name">MCH</td><td class="result ok">31.8</td><td class="result2">—</td><td class="unit">pg</td><td class="ref">25.7 ~ 33.0</td><td><span class="badge ok"><span class="dot"></span>정상</span></td></tr>
+      <tr><td class="name">MCHC</td><td class="result ok">33.2</td><td class="result2">—</td><td class="unit">g/dL</td><td class="ref">32.0 ~ 36.0</td><td><span class="badge ok"><span class="dot"></span>정상</span></td></tr>
+      <tr><td class="name">Platelet<small>혈소판</small></td><td class="result ok">236</td><td class="result2">—</td><td class="unit">10³/μL</td><td class="ref">150 ~ 450</td><td><span class="badge ok"><span class="dot"></span>정상</span></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ── 간기능 ── -->
+<div class="section">
+  <div class="section-title">간기능 검사</div>
+  <table>
+    <thead>
+      <tr>
+        <th>항목</th>
+        <th class="num">2026-05-08</th>
+        <th class="num">다음 검사</th>
+        <th>단위</th>
+        <th>참고치</th>
+        <th>평가</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="name">Total Protein<small>총 단백질</small></td><td class="result good">7.0</td><td class="result2">—</td><td class="unit">g/dL</td><td class="ref">6.6 ~ 8.3</td><td><span class="badge good"><span class="dot"></span>정상</span></td></tr>
+      <tr><td class="name">Albumin<small>알부민</small></td><td class="result good">4.6</td><td class="result2">—</td><td class="unit">g/dL</td><td class="ref">3.5 ~ 5.2</td><td><span class="badge good"><span class="dot"></span>우수</span></td></tr>
+      <tr><td class="name">Bilirubin, total<small>총 빌리루빈</small></td><td class="result good">0.6</td><td class="result2">—</td><td class="unit">mg/dL</td><td class="ref">0.3 ~ 1.2</td><td><span class="badge good"><span class="dot"></span>정상</span></td></tr>
+      <tr><td class="name">ALP<small>알칼리 인산분해효소</small></td><td class="result good">60</td><td class="result2">—</td><td class="unit">U/L</td><td class="ref">30 ~ 120</td><td><span class="badge good"><span class="dot"></span>정상</span></td></tr>
+      <tr><td class="name">AST (SGOT)</td><td class="result good">23</td><td class="result2">—</td><td class="unit">U/L</td><td class="ref">≤ 40</td><td><span class="badge good"><span class="dot"></span>정상</span></td></tr>
+      <tr><td class="name">ALT (SGPT)</td><td class="result good">18</td><td class="result2">—</td><td class="unit">U/L</td><td class="ref">≤ 40</td><td><span class="badge good"><span class="dot"></span>정상</span></td></tr>
+      <tr><td class="name">γ-GT<small>감마GTP</small></td><td class="result good">16</td><td class="result2">—</td><td class="unit">U/L</td><td class="ref">≤ 64</td><td><span class="badge good"><span class="dot"></span>정상</span></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ── 신장 ── -->
+<div class="section">
+  <div class="section-title">신장 기능 검사</div>
+  <table>
+    <thead>
+      <tr>
+        <th>항목</th>
+        <th class="num">2026-05-08</th>
+        <th class="num">다음 검사</th>
+        <th>단위</th>
+        <th>참고치</th>
+        <th>평가</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="name">Creatinine<small>크레아티닌</small></td><td class="result good">0.76</td><td class="result2">—</td><td class="unit">mg/dL</td><td class="ref">0.74 ~ 1.26</td><td><span class="badge good"><span class="dot"></span>정상</span></td></tr>
+      <tr><td class="name">BUN<small>혈중 요소 질소</small></td><td class="result ok">21.1</td><td class="result2">—</td><td class="unit">mg/dL</td><td class="ref">7.9 ~ 25.0</td><td><span class="badge ok"><span class="dot"></span>정상</span></td></tr>
+      <tr><td class="name">eGFR (CKD-EPI)<small>사구체 여과율</small></td><td class="result good">112</td><td class="result2">—</td><td class="unit">mL/min/1.73m²</td><td class="ref">&gt; 59</td><td><span class="badge good"><span class="dot"></span>최우수</span></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ── 고지혈증 ── -->
+<div class="section">
+  <div class="section-title">고지혈증 검사</div>
+  <table>
+    <thead>
+      <tr>
+        <th>항목</th>
+        <th class="num">2026-05-08</th>
+        <th class="num">다음 검사</th>
+        <th>단위</th>
+        <th>참고치</th>
+        <th>평가</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="name">Total Cholesterol<small>총 콜레스테롤</small></td><td class="result good">164</td><td class="result2">—</td><td class="unit">mg/dL</td><td class="ref">Desirable &lt; 200</td><td><span class="badge good"><span class="dot"></span>우수</span></td></tr>
+      <tr><td class="name">HDL Cholesterol<small>좋은 콜레스테롤</small></td><td class="result warn">53</td><td class="result2">—</td><td class="unit">mg/dL</td><td class="ref">40~60 (60+ 이상적)</td><td><span class="badge warn"><span class="dot"></span>정상 (개선 여지)</span></td></tr>
+      <tr><td class="name">LDL Cholesterol<small>나쁜 콜레스테롤</small></td><td class="result good">93</td><td class="result2">—</td><td class="unit">mg/dL</td><td class="ref">&lt; 130</td><td><span class="badge good"><span class="dot"></span>우수</span></td></tr>
+      <tr><td class="name">Triglyceride<small>중성지방</small></td><td class="result good">87</td><td class="result2">—</td><td class="unit">mg/dL</td><td class="ref">Normal &lt; 150</td><td><span class="badge good"><span class="dot"></span>우수</span></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ── 당뇨/혈당 ── -->
+<div class="section">
+  <div class="section-title">당뇨 · 혈당 검사</div>
+  <table>
+    <thead>
+      <tr>
+        <th>항목</th>
+        <th class="num">2026-05-08</th>
+        <th class="num">다음 검사</th>
+        <th>단위</th>
+        <th>참고치</th>
+        <th>평가</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="name">Glucose<small>공복 혈당</small></td><td class="result good">89</td><td class="result2">—</td><td class="unit">mg/dL</td><td class="ref">60 ~ 100</td><td><span class="badge good"><span class="dot"></span>정상</span></td></tr>
+      <tr><td class="name">HbA1c (NGSP)<small>당화혈색소 — 핵심 모니터링</small></td><td class="result warn">5.6%</td><td class="result2">—</td><td class="unit">%</td><td class="ref">≤ 5.6% (전단계 5.7%+)</td><td><span class="badge warn"><span class="dot"></span>상한선 ⚠️</span></td></tr>
+      <tr><td class="name">HbA1c (IFCC)</td><td class="result warn">38</td><td class="result2">—</td><td class="unit">mmol/mol</td><td class="ref">≤ 38</td><td><span class="badge warn"><span class="dot"></span>경계</span></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ── 췌장 ── -->
+<div class="section">
+  <div class="section-title">소화기 · 췌장 검사</div>
+  <table>
+    <thead>
+      <tr>
+        <th>항목</th>
+        <th class="num">2026-05-08</th>
+        <th class="num">다음 검사</th>
+        <th>단위</th>
+        <th>참고치</th>
+        <th>평가</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="name">Amylase<small>아밀라아제</small></td><td class="result ok">89</td><td class="result2">—</td><td class="unit">U/L</td><td class="ref">28 ~ 100</td><td><span class="badge ok"><span class="dot"></span>정상</span></td></tr>
+      <tr><td class="name">Lipase<small>리파아제</small></td><td class="result ok">31</td><td class="result2">—</td><td class="unit">U/L</td><td class="ref">13 ~ 60</td><td><span class="badge ok"><span class="dot"></span>정상</span></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ── 염증/통풍 ── -->
+<div class="section">
+  <div class="section-title">염증 · 통풍 검사</div>
+  <table>
+    <thead>
+      <tr>
+        <th>항목</th>
+        <th class="num">2026-05-08</th>
+        <th class="num">다음 검사</th>
+        <th>단위</th>
+        <th>참고치</th>
+        <th>평가</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="name">CRP<small>C반응성 단백 — 염증 지표</small></td><td class="result good">&lt; 0.06</td><td class="result2">—</td><td class="unit">mg/dL</td><td class="ref">&lt; 0.50</td><td><span class="badge good"><span class="dot"></span>최우수</span></td></tr>
+      <tr><td class="name">Uric Acid<small>요산 (통풍)</small></td><td class="result good">3.9</td><td class="result2">—</td><td class="unit">mg/dL</td><td class="ref">3.5 ~ 7.2</td><td><span class="badge good"><span class="dot"></span>우수</span></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ── 갑상선 ── -->
+<div class="section">
+  <div class="section-title">갑상선 기능 검사</div>
+  <table>
+    <thead>
+      <tr>
+        <th>항목</th>
+        <th class="num">2026-05-08</th>
+        <th class="num">다음 검사</th>
+        <th>단위</th>
+        <th>참고치</th>
+        <th>평가</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="name">T3<small>트리아이오도타이로닌</small></td><td class="result ok">1.26</td><td class="result2">—</td><td class="unit">ng/mL</td><td class="ref">0.8 ~ 2.0</td><td><span class="badge ok"><span class="dot"></span>정상</span></td></tr>
+      <tr><td class="name">Free T4<small>유리 티록신</small></td><td class="result ok">1.42</td><td class="result2">—</td><td class="unit">ng/dL</td><td class="ref">0.93 ~ 1.70</td><td><span class="badge ok"><span class="dot"></span>정상</span></td></tr>
+      <tr><td class="name">TSH<small>갑상선 자극 호르몬</small></td><td class="result good">1.83</td><td class="result2">—</td><td class="unit">μIU/mL</td><td class="ref">0.27 ~ 4.20</td><td><span class="badge good"><span class="dot"></span>이상적</span></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ── 전해질 ── -->
+<div class="section">
+  <div class="section-title">전해질 검사</div>
+  <table>
+    <thead>
+      <tr>
+        <th>항목</th>
+        <th class="num">2026-05-08</th>
+        <th class="num">다음 검사</th>
+        <th>단위</th>
+        <th>참고치</th>
+        <th>평가</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="name">Na (Sodium)<small>나트륨</small></td><td class="result ok">141</td><td class="result2">—</td><td class="unit">mmol/L</td><td class="ref">136 ~ 146</td><td><span class="badge ok"><span class="dot"></span>정상</span></td></tr>
+      <tr><td class="name">K (Potassium)<small>칼륨</small></td><td class="result ok">4.7</td><td class="result2">—</td><td class="unit">mmol/L</td><td class="ref">3.5 ~ 5.1</td><td><span class="badge ok"><span class="dot"></span>정상</span></td></tr>
+      <tr><td class="name">Cl (Chloride)<small>염소</small></td><td class="result ok">104</td><td class="result2">—</td><td class="unit">mmol/L</td><td class="ref">101 ~ 109</td><td><span class="badge ok"><span class="dot"></span>정상</span></td></tr>
+      <tr><td class="name">Mg (Magnesium)<small>마그네슘</small></td><td class="result ok">2.3</td><td class="result2">—</td><td class="unit">mg/dL</td><td class="ref">1.6 ~ 2.6</td><td><span class="badge ok"><span class="dot"></span>정상</span></td></tr>
+      <tr><td class="name">Calcium<small>칼슘</small></td><td class="result ok">9.4</td><td class="result2">—</td><td class="unit">mg/dL</td><td class="ref">8.8 ~ 10.6</td><td><span class="badge ok"><span class="dot"></span>정상</span></td></tr>
+      <tr><td class="name">Inorganic Phosphorus<small>무기인</small></td><td class="result ok">4.1</td><td class="result2">—</td><td class="unit">mg/dL</td><td class="ref">2.5 ~ 4.5</td><td><span class="badge ok"><span class="dot"></span>정상</span></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ── 비타민 D ── -->
+<div class="section">
+  <div class="section-title">비타민 D</div>
+  <table>
+    <thead>
+      <tr>
+        <th>항목</th>
+        <th class="num">2026-05-08</th>
+        <th class="num">다음 검사</th>
+        <th>단위</th>
+        <th>참고치</th>
+        <th>평가</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="name">25-(OH) Vitamin D total<small>비타민 D 총량</small></td><td class="result good">66.9</td><td class="result2">—</td><td class="unit">ng/mL</td><td class="ref">Sufficiency 30.1~100.0</td><td><span class="badge good"><span class="dot"></span>우수</span></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ── 노트 ── -->
+<div class="note">
+  <h3>📌 모니터링 포인트 및 메모</h3>
+  <ul>
+    <li><strong>HbA1c 5.6%</strong> — 정상 상한선. 6개월~1년 후 재검 시 가장 먼저 확인할 항목.</li>
+    <li><strong>HDL 53</strong> — 정상이나 60 이상이면 심혈관 보호 효과 증가. 유산소 강도 유지 시 개선 기대.</li>
+    <li>체성분 우수 (골격근 44.3kg / 체지방 11.5kg), CRP &lt; 0.06 — 만성 염증 없음.</li>
+    <li>다음 검사 시 "다음 검사" 열에 결과 입력 후 추이 비교.</li>
+  </ul>
+</div>
+
+<footer>
+  검사기관: 종촌제일연합내과 · 검사일: 2026-05-08 · 담당의: 김정두 · 이 문서는 참고용이며 의학적 판단은 담당의와 상담하세요.
+</footer>
+
+</body>
+</html>
